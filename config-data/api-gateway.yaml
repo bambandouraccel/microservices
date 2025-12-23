@@ -1,0 +1,37 @@
+server:
+  port: 8080
+  #port: 8765
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    hostname: localhost
+    # Important pour que l'instance s'enregistre correctement
+    prefer-ip-address: true
+    #heartbeat-interval-in-seconds: 5 # J'envoie un signal toutes les 5s
+    #lease-renewal-interval-in-seconds: 5 # J'envoie un signal toutes les 5s
+    #lease-expiration-duration-in-seconds: 10 # Si pas de signal après 10s, je suis mort
+
+spring:
+  # AJOUTEZ CECI :
+  config:
+    import: "optional:configserver:http://localhost:8888"
+  cloud:
+    # Cette ligne est la clé pour corriger votre erreur
+    config:
+      enabled: true
+      uri: http://localhost:8888
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/user/**
+        

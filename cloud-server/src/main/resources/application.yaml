@@ -1,0 +1,22 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: cloud-server
+  cloud:
+    config:
+      server:
+        git:
+          # Si votre dépôt est public, pas besoin de credentials.
+          # Si c'est une branche spécifique (ex: main) :
+          default-label: main
+          # Attention : l'URI doit pointer vers le dépôt .git, pas vers une page web
+          uri: https://github.com/bambandouraccel/config-server.git
+          clone-on-start: true
+          search-paths: config-data
+  #
+  main:
+    web-application-type: servlet
+
+
