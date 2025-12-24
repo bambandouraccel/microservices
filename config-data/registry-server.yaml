@@ -2,13 +2,27 @@ server:
   port: 8761
 
 eureka:
+  instance:
+    hostname: localhost
   server:
-    enable-self-preservation: true # Désactive la sécurité
-    eviction-interval-timer-in-ms: 3000 # Nettoie les services morts toutes les 3 sec
+    # En développement : on désactive l'auto-préservation pour que Eureka 
+    # supprime immédiatement les services qui ne répondent plus.
+    enable-self-preservation: false
+    # Fréquence de nettoyage des instances expirées (3 secondes est agressif mais bon pour le dev)
+    eviction-interval-timer-in-ms: 3000 
   client:
+    # Le serveur Eureka n'a pas besoin de s'enregistrer auprès de lui-même
     register-with-eureka: false
     fetch-registry: false
     service-url:
+      #defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
       defaultZone: http://localhost:8761/eureka/
+
+# Pour voir ce qui se passe dans le registre
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
 
     
