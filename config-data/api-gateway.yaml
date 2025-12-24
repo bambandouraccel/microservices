@@ -21,11 +21,19 @@ spring:
           # Cette option permet d'appeler l'URL en minuscules
           lower-case-service-id: true 
       routes:
-        - id: user-service-route
-          uri: lb://user-service
+        - id: category-service-route
+          uri: lb://category-service
           predicates:
-            - Path=/user/**
-          # Optionnel : Ajoutez un filtre si votre microservice ne s'attend pas au préfixe /user
+            - Path=/categories/** 
+          # Optionnel : Ajoutez un filtre si votre microservice ne s'attend pas au préfixe /categories
+          # filters:
+          #   - StripPrefix=1
+          
+        - id: product-service-route
+          uri: lb://product-service 
+          predicates:
+            - Path=/products/** 
+          # Optionnel : Ajoutez un filtre si votre microservice ne s'attend pas au préfixe /products
           # filters:
           #   - StripPrefix=1
 
