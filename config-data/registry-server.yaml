@@ -2,14 +2,15 @@
 server:
   port: 8761
 
-  
+
 eureka:
   instance:
     hostname: localhost
   server:
     # En développement : on désactive l'auto-préservation pour que Eureka 
     # supprime immédiatement les services qui ne répondent plus.
-    enable-self-preservation: false
+    #enable-self-preservation: false
+    enable-self-preservation: true
     # Fréquence de nettoyage des instances expirées (3 secondes est agressif mais bon pour le dev)
     eviction-interval-timer-in-ms: 3000 
   client:
