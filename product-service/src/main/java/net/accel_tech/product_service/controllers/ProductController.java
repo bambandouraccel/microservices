@@ -1,5 +1,6 @@
 package net.accel_tech.product_service.controllers;
 
+import net.accel_tech.product_service.dto.CategoryDTO;
 import net.accel_tech.product_service.entities.Product;
 import net.accel_tech.product_service.repositories.ProductRepository;
 import org.springframework.stereotype.Controller;
@@ -7,6 +8,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/products")
@@ -23,14 +30,29 @@ public class ProductController {
     // Afficher la liste des produits
     @GetMapping("/list")
     public String listProducts(Model model) {
-        model.addAttribute("products", productRepository.findAll());
-        return "product-list"; // Cherchera src/main/resources/templates/product-list.html
+        List<Product> products = productRepository.findAll();
+        List<CategoryDTO> categories = fetchCategories();
+
+        // Création d'une Map pour associer ID -> Nom rapidement
+        Map<Long, String> categoryMap = categories.stream()
+                .collect(Collectors.toMap(CategoryDTO::getId, CategoryDTO::getName));
+
+        model.addAttribute("products", products);
+        model.addAttribute("categoryNames", categoryMap);
+        return "product-list";
     }
 
-    // Afficher le formulaire d'ajout
+    // Méthode utilitaire pour récupérer les catégories via l'API Gateway ou Eureka
+    private List<CategoryDTO> fetchCategories() {
+        // On utilise le nom du service enregistré dans Eureka
+        CategoryDTO[] categories = restTemplate.getForObject("http://category-service/api/categories", CategoryDTO[].class);
+        return categories != null ? Arrays.asList(categories) : Collections.emptyList();
+    }
+
     @GetMapping("/add")
     public String showAddForm(Model model) {
         model.addAttribute("product", new Product());
+        model.addAttribute("allCategories", fetchCategories()); // On envoie la liste au HTML
         return "add-product";
     }
 
@@ -50,13 +72,14 @@ public class ProductController {
         return "product-detail";
     }
 
-    // 1. Afficher le formulaire de modification
+
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable("id") Long id, Model model) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Produit introuvable"));
         model.addAttribute("product", product);
-        return "edit-product"; // Nous allons créer ce fichier HTML
+        model.addAttribute("allCategories", fetchCategories());
+        return "edit-product";
     }
 
     // 2. Traiter la mise à jour

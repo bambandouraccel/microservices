@@ -96,7 +96,8 @@
                          class="product-image" alt="Image produit">
                 </div>
                 <div class="card-body">
-                    <span class="category-tag" th:text="'ID Cat: ' + ${p.categoryId}">Catégorie</span>
+                    <!--<span class="category-tag" th:text="'ID Cat: ' + ${p.categoryId}">Catégorie</span> -->
+                    <td th:text="${categoryNames[p.categoryId]}">Catégorie</td>
                     <h5 class="card-title fw-bold my-2" th:text="${p.name}">Nom du produit</h5>
                     <div class="d-flex justify-content-between align-items-center mt-3">
                         <span class="price-badge" th:text="${p.price} + ' €'">0.00 €</span>

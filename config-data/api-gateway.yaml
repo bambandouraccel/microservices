@@ -21,7 +21,7 @@ spring:
           # Cette option permet d'appeler l'URL en minuscules
           lower-case-service-id: true 
       routes:
-        - id: category-service-route
+        - id: category-service
           uri: lb://category-service
           predicates:
             - Path=/api/categories/** 
@@ -29,7 +29,7 @@ spring:
           # filters:
           #   - StripPrefix=1
           
-        - id: product-service-route
+        - id: product-service
           uri: lb://product-service 
           predicates:
             - Path=/products/** 
