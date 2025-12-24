@@ -28,10 +28,17 @@ spring:
     gateway:
       discovery:
         locator:
-          enabled: true
+          enabled: true  # Permet à la Gateway de voir les services enregistrés dans Eureka
       routes:
         - id: user-service
           uri: lb://user-service
           predicates:
             - Path=/user/**
+
+# Pour voir ce qui se passe dans le registre
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
         

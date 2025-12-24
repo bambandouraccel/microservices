@@ -12,16 +12,3 @@ spring:
       override-system-properties: false
 
 
-# On force le port ICI pour éviter que le défaut (8080) ou un import Git (8888) ne prenne le dessus avant la fin
-server:
-  port: 8761
-
-#spring:
- # application:
-  #  name: registry-server
-  #cloud:
-   # config:
-    #  uri: http://localhost:8888
-     # fail-fast: true
-
-
