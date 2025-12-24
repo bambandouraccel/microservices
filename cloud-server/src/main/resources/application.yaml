@@ -14,8 +14,8 @@ spring:
           # Branche par défaut
           default-label: main
           # Dossier à l'intérieur du dépôt où se trouvent les fichiers .yml ou .properties
-          #search-paths: config-data
-          search-paths: 'config-data,**'
+          search-paths: config-data
+          #search-paths: 'config-data,**'
           # Force le clone du dépôt au démarrage pour détecter les erreurs immédiatement
           clone-on-start: true
           # Optionnel : si le dépôt était privé, vous ajouteriez :
