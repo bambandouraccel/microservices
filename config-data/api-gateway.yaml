@@ -24,7 +24,7 @@ spring:
         - id: category-service-route
           uri: lb://category-service
           predicates:
-            - Path=/categories/** 
+            - Path=/api/categories/** 
           # Optionnel : Ajoutez un filtre si votre microservice ne s'attend pas au préfixe /categories
           # filters:
           #   - StripPrefix=1

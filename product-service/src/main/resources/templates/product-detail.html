@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Détails | Accel Tech</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f4f7f6; }
+        .detail-card { border: none; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow: hidden; }
+        .img-container { background-color: #fff; display: flex; align-items: center; justify-content: center; min-height: 400px; }
+        .product-img { max-width: 100%; height: auto; transition: transform 0.5s; }
+        .product-img:hover { transform: scale(1.05); }
+        .badge-info { background-color: #e0e0ff; color: #6c5ce7; font-weight: 600; }
+        .date-text { font-size: 0.85rem; color: #888; }
+    </style>
+</head>
+<body>
+
+<div class="container py-5">
+    <a th:href="@{/products/list}" class="btn btn-link text-dark mb-4 text-decoration-none">
+        <i class="fas fa-arrow-left me-2"></i> Retour à la boutique
+    </a>
+
+    <div class="card detail-card shadow">
+        <div class="row g-0">
+            <div class="col-md-6 img-container border-end">
+                <img th:src="${product.image}" class="product-img" alt="Image du produit">
+            </div>
+
+            <div class="col-md-6 p-5 d-flex flex-column justify-content-center">
+                <span class="badge badge-info mb-2 p-2 w-25 text-center" th:text="'ID: ' + ${product.id}"></span>
+                <h1 class="fw-bold mb-3" th:text="${product.name}">Nom du produit</h1>
+
+                <h3 class="text-primary fw-bold mb-4" th:text="${product.price} + ' €'"></h3>
+
+                <div class="mb-4">
+                    <p class="mb-1"><i class="fas fa-tag me-2 text-muted"></i> Catégorie ID: <strong th:text="${product.categoryId}"></strong></p>
+                </div>
+
+                <hr>
+
+                <div class="mt-2">
+                    <p class="date-text mb-1">
+                        <i class="far fa-calendar-plus me-2"></i> Ajouté le :
+                        <span th:text="${#temporals.format(product.createdAt, 'dd MMMM yyyy HH:mm')}"></span>
+                    </p>
+                    <p class="date-text">
+                        <i class="far fa-edit me-2"></i> Dernière modification :
+                        <span th:text="${#temporals.format(product.updatedAt, 'dd MMMM yyyy HH:mm')}"></span>
+                    </p>
+                </div>
+
+                <div class="mt-5">
+                    <button class="btn btn-dark btn-lg px-5 rounded-pill me-2">Acheter maintenant</button>
+                    <a th:href="@{/products/edit/{id}(id=${product.id})}" class="btn btn-outline-secondary btn-lg rounded-pill px-4">Éditer</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
