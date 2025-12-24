@@ -3,6 +3,10 @@ spring:
     name: registry-server
   cloud:
     config:
-      enabled: true
+      #enabled: true
       uri: http://localhost:8888
+      fail-fast: true # Arrête le démarrage si le Config Server est absent
+      retry:
+        initial-interval: 2000
+        max-attempts: 5
 

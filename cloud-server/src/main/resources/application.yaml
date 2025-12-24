@@ -4,19 +4,40 @@ server:
 spring:
   application:
     name: cloud-server
+
   cloud:
     config:
       server:
         git:
-          # Si votre dépôt est public, pas besoin de credentials.
-          # Si c'est une branche spécifique (ex: main) :
+          # URI du dépôt (doit être accessible par le serveur)
+          uri: https://github.com/bambandouraccel/microservices.git
+          # Branche par défaut
           default-label: main
-          # Attention : l'URI doit pointer vers le dépôt .git, pas vers une page web
-          uri: https://github.com/bambandouraccel/config-server.git
+          # Dossier à l'intérieur du dépôt où se trouvent les fichiers .yml ou .properties
+          #search-paths: config-data
+          search-paths: 'config-data,**'
+          # Force le clone du dépôt au démarrage pour détecter les erreurs immédiatement
           clone-on-start: true
-          search-paths: config-data
-  #
+          # Optionnel : si le dépôt était privé, vous ajouteriez :
+          # username: votre_utilisateur
+          # password: votre_token_github
+
+  # Précise le type d'application (Servlet est le standard pour Config Server)
   main:
     web-application-type: servlet
 
+# Configuration d'Actuator pour exposer les points de contrôle
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,env"
+  endpoint:
+    health:
+      show-details: always
 
+# Configuration des logs pour voir ce qu'il se passe lors de la connexion Git
+logging:
+  level:
+    org.springframework.cloud.config.server: DEBUG
+    org.eclipse.jgit: INFO
