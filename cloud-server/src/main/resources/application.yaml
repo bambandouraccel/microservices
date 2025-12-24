@@ -22,9 +22,10 @@ spring:
           # username: votre_utilisateur
           # password: votre_token_github
 
-  # Précise le type d'application (Servlet est le standard pour Config Server)
   main:
     web-application-type: servlet
+
+
 
 # Configuration d'Actuator pour exposer les points de contrôle
 management:

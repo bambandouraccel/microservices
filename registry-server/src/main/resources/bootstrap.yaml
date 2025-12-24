@@ -1,12 +1,17 @@
 spring:
   application:
-    name: registry-server
+    name: registry-server    # Très important : c'est ce nom qui lie au fichier Git
   cloud:
     config:
-      #enabled: true
+      enabled: true
       uri: http://localhost:8888
       fail-fast: true # Arrête le démarrage si le Config Server est absent
-      retry:
-        initial-interval: 2000
-        max-attempts: 5
+      #retry:
+       # initial-interval: 2000
+        #max-attempts: 5
+
+# On force le port ICI pour éviter que le défaut (8080) ou un import Git (8888) ne prenne le dessus avant la fin
+server:
+  port: 8761
+  
 
