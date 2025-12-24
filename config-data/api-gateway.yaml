@@ -1,6 +1,6 @@
+# On définit le port par défaut en local au cas où le config-server est injoignable
 server:
-  port: 8080
-  #port: 8765
+  port: 8765
 
 eureka:
   client:
@@ -9,36 +9,28 @@ eureka:
     service-url:
       defaultZone: http://localhost:8761/eureka/
   instance:
-    hostname: localhost
-    # Important pour que l'instance s'enregistre correctement
     prefer-ip-address: true
-    #heartbeat-interval-in-seconds: 5 # J'envoie un signal toutes les 5s
-    #lease-renewal-interval-in-seconds: 5 # J'envoie un signal toutes les 5s
-    #lease-expiration-duration-in-seconds: 10 # Si pas de signal après 10s, je suis mort
 
 spring:
-  # AJOUTEZ CECI :
-  config:
-    import: "optional:configserver:http://localhost:8888"
   cloud:
-    # Cette ligne est la clé pour corriger votre erreur
-    config:
-      enabled: true
-      uri: http://localhost:8888
     gateway:
       discovery:
         locator:
-          enabled: true  # Permet à la Gateway de voir les services enregistrés dans Eureka
+          enabled: true
+          # Important : Eureka met souvent les noms en MAJUSCULES (ex: USER-SERVICE)
+          # Cette option permet d'appeler l'URL en minuscules
+          lower-case-service-id: true 
       routes:
-        - id: user-service
+        - id: user-service-route
           uri: lb://user-service
           predicates:
             - Path=/user/**
+          # Optionnel : Ajoutez un filtre si votre microservice ne s'attend pas au préfixe /user
+          # filters:
+          #   - StripPrefix=1
 
-# Pour voir ce qui se passe dans le registre
 management:
   endpoints:
     web:
       exposure:
-        include: "*"
-        
+        include: "gateway,health,info"
