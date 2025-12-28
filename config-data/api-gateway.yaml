@@ -1,7 +1,5 @@
-# On définit le port par défaut en local au cas où le config-server est injoignable
 server:
   port: 8765
-
 eureka:
   client:
     register-with-eureka: true
@@ -9,8 +7,8 @@ eureka:
     service-url:
       defaultZone: http://localhost:8761/eureka/
   instance:
-    prefer-ip-address: true
-
+    #prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 spring:
   cloud:
     gateway:
@@ -27,8 +25,7 @@ spring:
             - Path=/api/categories/** 
           # Optionnel : Ajoutez un filtre si votre microservice ne s'attend pas au préfixe /categories
           # filters:
-          #   - StripPrefix=1
-          
+          #   - StripPrefix=1        
         - id: product-service
           uri: lb://product-service 
           predicates:
@@ -36,7 +33,6 @@ spring:
           # Optionnel : Ajoutez un filtre si votre microservice ne s'attend pas au préfixe /products
           # filters:
           #   - StripPrefix=1
-
 management:
   endpoints:
     web:

@@ -1,6 +1,5 @@
 server:
-  port: 8081
-
+  port: ${PORT:${SERVER_PORT:0}}
 spring:
   h2:
     console:
@@ -24,11 +23,7 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
   instance:
-    # Utilise l'IP plutôt que le nom d'hôte pour éviter les soucis de DNS en local
-    #prefer-ip-address: true
-    #instance-id: ${spring.application.name}:${random.value}
-    hostname: localhost
-
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
 # Exposition des points de contrôle pour Actuator
 management:
