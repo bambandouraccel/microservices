@@ -20,15 +20,11 @@ spring:
         - id: category-service
           uri: lb://category-service
           predicates:
-            - Path=/api/categories/**  
-          filters:
-            - RewritePath=/api/(?<segment>.*), /$\{segment}      
+            - Path=/api/categories/**    
         - id: product-service
           uri: lb://product-service 
           predicates:
             - Path=/products/**
-          filters:
-            - RewritePath=/products/(?<segment>.*), /$\{segment} 
 management:
   endpoints:
     web:
