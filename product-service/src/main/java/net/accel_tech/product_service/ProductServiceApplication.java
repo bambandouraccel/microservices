@@ -16,10 +16,4 @@ public class ProductServiceApplication {
 		SpringApplication.run(ProductServiceApplication.class, args);
 	}
 
-	@Bean
-	@LoadBalanced // Crucial pour utiliser le nom du service (category-service) au lieu de l'IP
-	public RestTemplate restTemplate() {
-		return new RestTemplate();
-	}
-
 }
