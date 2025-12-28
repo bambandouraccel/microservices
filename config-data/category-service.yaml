@@ -24,6 +24,7 @@ eureka:
     fetch-registry: true
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    
 
 # Exposition des points de contrôle pour Actuator
 management:
