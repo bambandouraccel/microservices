@@ -1,23 +1,17 @@
 server:
   port: ${PORT:${SERVER_PORT:0}}
+
 spring:
-  # Configuration de la base de données H2 (Propre à ce microservice)
   datasource:
-    url: jdbc:h2:mem:productdb
-    driverClassName: org.h2.Driver
-    username: sa
-    password: 
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-  
-  # Configuration JPA / Hibernate
+    url: jdbc:mysql://localhost:3306/webstoredb?createDatabaseIfNotExist=true
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: admin
+    password: admin
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: update
-    show-sql: true
+  show-sql: true
 
   # Configuration Thymeleaf pour le rendu des vues
   thymeleaf:

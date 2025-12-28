@@ -11,3 +11,5 @@ spring:
         max-attempts: 5
       override-system-properties: false
 
+server:
+  port: 8080
