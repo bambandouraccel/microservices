@@ -5,6 +5,7 @@ spring:
     name: cloud-server
   cloud:
     config:
+      enabled: true
       server:
         git:
           uri: https://github.com/bambandouraccel/microservices.git
@@ -12,6 +13,7 @@ spring:
           # Dossier à l'intérieur du dépôt où se trouvent les fichiers de configurations
           search-paths: config-data
           clone-on-start: true
+
   main:
     web-application-type: servlet
 # Configuration d'Actuator pour exposer les points de contrôle

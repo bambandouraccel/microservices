@@ -5,4 +5,5 @@ spring:
     config:
       enabled: true
       uri: http://localhost:8888
-      fail-fast: true # Arrête le démarrage si le Config Server est absent
+      fail-fast: true
+

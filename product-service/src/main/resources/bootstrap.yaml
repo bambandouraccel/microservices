@@ -3,6 +3,6 @@ spring:
     name: product-service
   cloud:
     config:
-      enable: true
+      enabled: true
       uri: http://localhost:8888
       fail-fast: true
