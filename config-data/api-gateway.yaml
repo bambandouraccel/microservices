@@ -1,5 +1,5 @@
 server:
-  port: 8765
+  port: 8080
 eureka:
   client:
     register-with-eureka: true
@@ -15,24 +15,16 @@ spring:
       discovery:
         locator:
           enabled: true
-          # Important : Eureka met souvent les noms en MAJUSCULES (ex: USER-SERVICE)
-          # Cette option permet d'appeler l'URL en minuscules
           lower-case-service-id: true 
       routes:
         - id: category-service
           uri: lb://category-service
           predicates:
-            - Path=/api/categories/** 
-          # Optionnel : Ajoutez un filtre si votre microservice ne s'attend pas au préfixe /categories
-          # filters:
-          #   - StripPrefix=1        
+            - Path=/api/categories/**        
         - id: product-service
           uri: lb://product-service 
           predicates:
             - Path=/products/** 
-          # Optionnel : Ajoutez un filtre si votre microservice ne s'attend pas au préfixe /products
-          # filters:
-          #   - StripPrefix=1
 management:
   endpoints:
     web:
