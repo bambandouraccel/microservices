@@ -8,7 +8,7 @@ spring:
       server:
         git:
           uri: https://github.com/bambandouraccel/microservices.git
-          default-label: multiple-instances
+          default-label: advanced-gateway-config
           # Dossier à l'intérieur du dépôt où se trouvent les fichiers de configurations
           search-paths: config-data
           clone-on-start: true
