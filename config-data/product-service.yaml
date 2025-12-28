@@ -35,3 +35,7 @@ management:
     web:
       exposure:
         include: "health,info,env,refresh"
+        
+logging:
+  pattern:
+    console: "%d{HH:mm:ss} [%thread] %-5level %logger{36} - [${spring.application.name}] - %msg%n" 
