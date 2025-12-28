@@ -1,27 +1,18 @@
-# On force le port ICI pour éviter que le défaut (8080) ou un import Git (8888) ne prenne le dessus avant la fin
 server:
   port: 8761
-
 
 eureka:
   instance:
     hostname: localhost
   server:
-    # En développement : on désactive l'auto-préservation pour que Eureka 
-    # supprime immédiatement les services qui ne répondent plus.
-    #enable-self-preservation: false
     enable-self-preservation: true
-    # Fréquence de nettoyage des instances expirées (3 secondes est agressif mais bon pour le dev)
     eviction-interval-timer-in-ms: 3000 
   client:
-    # Le serveur Eureka n'a pas besoin de s'enregistrer auprès de lui-même
     register-with-eureka: false
     fetch-registry: false
-    service-url:
-      #defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
-      defaultZone: http://localhost:8761/eureka/
+    service-url: 
+      default-zone: http://${eureka.instance.hostname}:${server.port}/eureka/
 
-# Pour voir ce qui se passe dans le registre
 management:
   endpoints:
     web:

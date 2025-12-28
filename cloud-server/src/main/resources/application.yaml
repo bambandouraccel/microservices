@@ -1,32 +1,19 @@
 server:
   port: 8888
-
 spring:
   application:
     name: cloud-server
-
   cloud:
     config:
       server:
         git:
-          # URI du dépôt (doit être accessible par le serveur)
           uri: https://github.com/bambandouraccel/microservices.git
-          # Branche par défaut
-          default-label: main
-          # Dossier à l'intérieur du dépôt où se trouvent les fichiers .yml ou .properties
+          default-label: multiple-instances
+          # Dossier à l'intérieur du dépôt où se trouvent les fichiers de configurations
           search-paths: config-data
-          #search-paths: 'config-data,**'
-          # Force le clone du dépôt au démarrage pour détecter les erreurs immédiatement
           clone-on-start: true
-          # Optionnel : si le dépôt était privé, vous ajouteriez :
-          # username: votre_utilisateur
-          # password: votre_token_github
-
   main:
     web-application-type: servlet
-
-
-
 # Configuration d'Actuator pour exposer les points de contrôle
 management:
   endpoints:
@@ -36,7 +23,6 @@ management:
   endpoint:
     health:
       show-details: always
-
 # Configuration des logs pour voir ce qu'il se passe lors de la connexion Git
 logging:
   level:
