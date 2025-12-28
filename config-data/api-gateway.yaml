@@ -1,5 +1,6 @@
 server:
   port: 8080
+    
 eureka:
   client:
     register-with-eureka: true
@@ -9,6 +10,8 @@ eureka:
   instance:
     #prefer-ip-address: true
     hostname: localhost
+    lease-renewal-interval-in-seconds: 5 # Envoie un signal toutes les 5s (au lieu de 30s)
+    lease-expiration-duration-in-seconds: 10 # Si pas de signal après 10s, considère l'instance morte
 spring:
   cloud:
     gateway:

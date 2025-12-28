@@ -28,6 +28,8 @@ eureka:
     fetch-registry: true
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    lease-renewal-interval-in-seconds: 5 # Envoie un signal toutes les 5s (au lieu de 30s)
+    lease-expiration-duration-in-seconds: 10 # Si pas de signal après 10s, considère l'instance morte
 
 # Exposition des points de contrôle pour Actuator
 management:
@@ -35,7 +37,7 @@ management:
     web:
       exposure:
         include: "health,info,env,refresh"
-        
+
 logging:
   pattern:
     console: "%d{HH:mm:ss} [%thread] %-5level %logger{36} - [${spring.application.name}] - %msg%n" 
