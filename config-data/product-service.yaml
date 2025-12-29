@@ -40,4 +40,23 @@ management:
   endpoints:
     web:
       exposure:
-        include: "health,info,env,refresh"
+        include: "gateway,health,info,refresh,env,refresh,routes"
+
+logging:
+  pattern:
+    console: "%d{HH:mm:ss} [%thread] %-5level %logger{36} - [${spring.application.name}] - %msg%n"
+
+# For Circuit Breaker
+# Configuration de Resilience4j pour la tolérance aux pannes
+resilience4j.circuitbreaker:
+    instances:
+        productServiceCB:  # Nom arbitraire pour ton instance
+            registerHealthIndicator: true
+            slidingWindowSize: 10
+            permittedNumberOfCallsInHalfOpenState: 3
+            slidingWindowType: TIME_BASED
+            minimumNumberOfCalls: 4
+            waitDurationInOpenState: 5s
+            failureRateThreshold: 50
+            eventConsumerBufferSize: 10
+

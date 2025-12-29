@@ -1,7 +1,9 @@
 package net.accel_tech.product_service.controllers;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import net.accel_tech.product_service.dto.CategoryDTO;
 import net.accel_tech.product_service.entities.Product;
+import net.accel_tech.product_service.message.Message;
 import net.accel_tech.product_service.repositories.ProductRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,11 +33,13 @@ public class ProductController {
     @GetMapping("/list")
     public String listProducts(Model model) {
         List<Product> products = productRepository.findAll();
+
+        // Cet appel est maintenant protégé
         List<CategoryDTO> categories = fetchCategories();
 
-        // Création d'une Map pour associer ID -> Nom rapidement
         Map<Long, String> categoryMap = categories.stream()
-                .collect(Collectors.toMap(CategoryDTO::getId, CategoryDTO::getName));
+                .collect(Collectors.toMap(CategoryDTO::getId,
+                        CategoryDTO::getName, (a, b) -> a));
 
         model.addAttribute("products", products);
         model.addAttribute("categoryNames", categoryMap);
@@ -43,10 +47,18 @@ public class ProductController {
     }
 
     // Méthode utilitaire pour récupérer les catégories via l'API Gateway ou Eureka
-    private List<CategoryDTO> fetchCategories() {
-        // On utilise le nom du service enregistré dans Eureka
+    // 1. On définit le Circuit Breaker ici
+    @CircuitBreaker(name = "categoryServiceCB", fallbackMethod = "fallbackFetchCategories")
+    public List<CategoryDTO> fetchCategories() {
         CategoryDTO[] categories = restTemplate.getForObject("http://category-service/api/categories", CategoryDTO[].class);
         return categories != null ? Arrays.asList(categories) : Collections.emptyList();
+    }
+
+    // 2. Méthode de secours : si Category-Service est down, on ne plante pas !
+    public List<?> fallbackFetchCategories(Throwable t) {
+        System.err.println("Circuit Breaker activé ! Raison : " + t.getMessage());
+        // On retourne une liste vide ou une catégorie factice pour éviter l'erreur 500
+        return Collections.singletonList(new Message("Service Catégorie Indisponible"));
     }
 
     @GetMapping("/add")

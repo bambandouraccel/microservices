@@ -13,10 +13,15 @@ eureka:
     service-url: 
       default-zone: http://${eureka.instance.hostname}:${server.port}/eureka/
 
+# Exposition des points de contrôle pour Actuator
 management:
   endpoints:
     web:
       exposure:
-        include: "*"
+        include: "gateway,health,info,refresh,env,refresh,routes"
+
+logging:
+  pattern:
+    console: "%d{HH:mm:ss} [%thread] %-5level %logger{36} - [${spring.application.name}] - %msg%n"
 
     

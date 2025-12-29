@@ -30,4 +30,8 @@ management:
   endpoints:
     web:
       exposure:
-        include: "health,info,env,refresh"
+        include: "gateway,health,info,refresh,env,refresh,routes"
+
+logging:
+  pattern:
+    console: "%d{HH:mm:ss} [%thread] %-5level %logger{36} - [${spring.application.name}] - %msg%n"
