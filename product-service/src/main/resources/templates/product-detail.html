@@ -9,11 +9,14 @@
     <style>
         body { font-family: 'Poppins', sans-serif; background-color: #f4f7f6; }
         .detail-card { border: none; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow: hidden; }
-        .img-container { background-color: #fff; display: flex; align-items: center; justify-content: center; min-height: 400px; }
-        .product-img { max-width: 100%; height: auto; transition: transform 0.5s; }
+        .img-container { background-color: #fff; display: flex; align-items: center; justify-content: center; min-height: 400px; padding: 20px; }
+        .product-img { max-width: 100%; max-height: 450px; height: auto; transition: transform 0.5s; object-fit: contain; }
         .product-img:hover { transform: scale(1.05); }
-        .badge-info { background-color: #e0e0ff; color: #6c5ce7; font-weight: 600; }
+        .badge-info { background-color: #e0e0ff; color: #6c5ce7; font-weight: 600; border-radius: 10px; }
+        .badge-category { background-color: #f1f2f6; color: #2f3542; font-weight: 500; border-radius: 8px; padding: 8px 15px; display: inline-block; }
+        .badge-maintenance { background-color: #ffeaa7; color: #d63031; border: 1px solid #fab1a0; }
         .date-text { font-size: 0.85rem; color: #888; }
+        .price-text { color: #6c5ce7; font-size: 2.5rem; }
     </style>
 </head>
 <body>
@@ -26,40 +29,56 @@
     <div class="card detail-card shadow">
         <div class="row g-0">
             <div class="col-md-6 img-container border-end">
-                <img th:src="${product.image}" class="product-img" alt="Image du produit">
+                <img th:src="${product.image != null && product.image != '' ? product.image : 'https://via.placeholder.com/400'}"
+                     class="product-img" alt="Image du produit">
             </div>
 
             <div class="col-md-6 p-5 d-flex flex-column justify-content-center">
-                <span class="badge badge-info mb-2 p-2 w-25 text-center" th:text="'ID: ' + ${product.id}"></span>
-                <h1 class="fw-bold mb-3" th:text="${product.name}">Nom du produit</h1>
+                <div class="mb-2">
+                    <span class="badge badge-info px-3 py-2" th:text="'REF: #' + ${product.id}"></span>
+                </div>
 
-                <h3 class="text-primary fw-bold mb-4" th:text="${product.price} + ' €'"></h3>
+                <h1 class="fw-bold mb-3 text-dark" th:text="${product.name}">Nom du produit</h1>
 
                 <div class="mb-4">
-                    <p class="mb-1"><i class="fas fa-tag me-2 text-muted"></i> Catégorie ID: <strong th:text="${product.categoryId}"></strong></p>
+                    <div class="badge-category"
+                         th:classappend="${product.categoryId == -1L} ? 'badge-maintenance' : ''">
+                        <i class="fas fa-tag me-2 opacity-50"></i>
+                        <span th:text="${categoryNames[product.categoryId] ?: 'Catégorie inconnue'}"></span>
+                    </div>
                 </div>
 
-                <hr>
+                <h3 class="price-text fw-bold mb-4" th:text="${product.price} + ' €'"></h3>
+
+                <hr class="my-4">
 
                 <div class="mt-2">
-                    <p class="date-text mb-1">
-                        <i class="far fa-calendar-plus me-2"></i> Ajouté le :
-                        <span th:text="${#temporals.format(product.createdAt, 'dd MMMM yyyy HH:mm')}"></span>
+                    <p class="date-text mb-2">
+                        <i class="far fa-calendar-plus me-2 text-primary"></i>
+                        <strong>Ajouté le :</strong>
+                        <span th:text="${#temporals.format(product.createdAt, 'dd MMMM yyyy à HH:mm')}"></span>
                     </p>
-                    <p class="date-text">
-                        <i class="far fa-edit me-2"></i> Dernière modification :
-                        <span th:text="${#temporals.format(product.updatedAt, 'dd MMMM yyyy HH:mm')}"></span>
+                    <p class="date-text" th:if="${product.updatedAt != null}">
+                        <i class="far fa-edit me-2 text-success"></i>
+                        <strong>Dernière modif :</strong>
+                        <span th:text="${#temporals.format(product.updatedAt, 'dd MMMM yyyy à HH:mm')}"></span>
                     </p>
                 </div>
 
-                <div class="mt-5">
-                    <button class="btn btn-dark btn-lg px-5 rounded-pill me-2">Acheter maintenant</button>
-                    <a th:href="@{/products/edit/{id}(id=${product.id})}" class="btn btn-outline-secondary btn-lg rounded-pill px-4">Éditer</a>
+                <div class="mt-5 d-flex gap-2">
+                    <button class="btn btn-dark btn-lg px-5 rounded-pill shadow-sm flex-grow-1">
+                        <i class="fas fa-shopping-cart me-2"></i> Acheter
+                    </button>
+                    <a th:href="@{/products/edit/{id}(id=${product.id})}"
+                       class="btn btn-outline-secondary btn-lg rounded-pill px-4 shadow-sm">
+                        <i class="far fa-edit"></i>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

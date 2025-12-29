@@ -50,7 +50,7 @@ logging:
 # Configuration de Resilience4j pour la tolérance aux pannes
 resilience4j.circuitbreaker:
     instances:
-        productServiceCB:  # Nom arbitraire pour ton instance
+        categoryServiceCB:  # Nom arbitraire pour ton instance
             registerHealthIndicator: true
             slidingWindowSize: 10
             permittedNumberOfCallsInHalfOpenState: 3

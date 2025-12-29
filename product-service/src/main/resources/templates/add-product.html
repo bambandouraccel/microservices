@@ -11,6 +11,8 @@
         .form-card { border: none; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
         .preview-img { width: 100%; max-height: 200px; object-fit: contain; border-radius: 10px; background: #eee; }
         .btn-gradient { background: linear-gradient(135deg, #6c5ce7, #a29bfe); border: none; color: white; border-radius: 10px; padding: 12px; }
+        .btn-gradient:disabled { background: #ccc; cursor: not-allowed; }
+        .service-down-text { font-size: 0.8rem; color: #e74c3c; margin-top: 5px; font-weight: 600; }
     </style>
 </head>
 <body>
@@ -24,15 +26,23 @@
                     <p class="text-muted">Remplissez les informations ci-dessous</p>
                 </div>
 
+                <div th:if="${allCategories.size() == 1 && allCategories[0].id == -1}"
+                     class="alert alert-danger d-flex align-items-center mb-4" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <div>
+                        Le service de catégories est hors ligne. Impossible de créer un produit.
+                    </div>
+                </div>
+
                 <form th:action="@{/products/save}" th:object="${product}" method="post">
                     <div class="mb-3">
-                        <label class="form-label fw-600">Nom du produit</label>
+                        <label class="form-label fw-bold">Nom du produit</label>
                         <input type="text" th:field="*{name}" class="form-control" placeholder="ex: Smartphone Pro Max" required>
                     </div>
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Prix (€)</label>
+                            <label class="form-label fw-bold">Prix (€)</label>
                             <input type="number" step="0.01" th:field="*{price}" class="form-control" placeholder="0.00" required>
                         </div>
                         <div class="col-md-6 mb-3">
@@ -41,14 +51,18 @@
                                 <option value="" disabled selected>Choisir une catégorie...</option>
                                 <option th:each="cat : ${allCategories}"
                                         th:value="${cat.id}"
-                                        th:text="${cat.name}">
+                                        th:text="${cat.name}"
+                                        th:disabled="${cat.id == -1}">
                                 </option>
                             </select>
+                            <div th:if="${allCategories.size() == 1 && allCategories[0].id == -1}" class="service-down-text">
+                                <i class="fas fa-plug"></i> Service maintenance
+                            </div>
                         </div>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">URL de l'image</label>
+                        <label class="form-label fw-bold">URL de l'image</label>
                         <input type="text" id="imageInput" th:field="*{image}" class="form-control" placeholder="http://..." oninput="previewImage()">
                     </div>
 
@@ -58,10 +72,12 @@
                     </div>
 
                     <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-gradient fw-bold">
+                        <button type="submit"
+                                class="btn btn-gradient fw-bold"
+                                th:disabled="${allCategories.size() == 1 && allCategories[0].id == -1}">
                             <i class="fas fa-check-circle me-2"></i>Enregistrer le produit
                         </button>
-                        <a th:href="@{/products/list}" class="btn btn-link text-muted mt-2">Annuler</a>
+                        <a th:href="@{/products/list}" class="btn btn-link text-muted mt-2 text-decoration-none">Annuler</a>
                     </div>
                 </form>
             </div>
@@ -79,6 +95,9 @@
             preview.src = "https://via.placeholder.com/200";
         }
     }
+
+    // Initialiser l'aperçu au chargement si une URL existe déjà
+    window.onload = previewImage;
 </script>
 </body>
 </html>

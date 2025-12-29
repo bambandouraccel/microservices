@@ -55,10 +55,12 @@ public class ProductController {
     }
 
     // 2. Méthode de secours : si Category-Service est down, on ne plante pas !
-    public List<?> fallbackFetchCategories(Throwable t) {
-        System.err.println("Circuit Breaker activé ! Raison : " + t.getMessage());
-        // On retourne une liste vide ou une catégorie factice pour éviter l'erreur 500
-        return Collections.singletonList(new Message("Service Catégorie Indisponible"));
+    public List<CategoryDTO> fallbackFetchCategories(Throwable t) {
+        // Log pour le développeur
+        System.err.println("Fallback activé. Type d'erreur : " + t.getClass().getSimpleName());
+
+        // On retourne une catégorie "témoin" avec un ID spécial (ex: -1)
+        return Collections.singletonList(new CategoryDTO(-1L, "Service Catégorie Indisponible..."));
     }
 
     @GetMapping("/add")
