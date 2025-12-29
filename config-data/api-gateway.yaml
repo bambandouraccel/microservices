@@ -28,11 +28,16 @@ spring:
           uri: lb://product-service 
           predicates:
             - Path=/products/**
+
+# Configuration d'Actuator pour exposer les points de contrôle
 management:
   endpoints:
     web:
       exposure:
-        include: "gateway,health,info"
+        include: "health,info,env,gateway,health,refresh"
+  endpoint:
+    health:
+      show-details: always
 
 logging:
   pattern:

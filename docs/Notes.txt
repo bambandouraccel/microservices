@@ -1,0 +1,40 @@
+
+Question: THE SELF PRESERVATION MODE IS TURNED OFF. THIS MAY NOT PROTECT INSTANCE EXPIRY IN CASE OF NETWORK/OTHER PROBLEMS.
+
+Ce message est simplement un **avertissement informatif**. Il apparaît parce que tu as désactivé le mode d'auto-préservation (`enable-self-preservation: false`) comme nous l'avons vu précédemment.
+
+Voici ce que cela signifie concrètement pour ton projet :
+
+### 1. La traduction simple
+
+"Le mode d'auto-préservation est désactivé. Eureka ne protégera pas les instances de l'expiration en cas de problème réseau."
+
+En temps normal, si Eureka ne reçoit plus de nouvelles d'un service, il se demande : *"Est-ce que le service est mort, ou est-ce que c'est mon réseau qui est coupé ?"*.
+
+* **Avec le mode activé :** Dans le doute, il garde tout le monde (pour "préserver").
+* **Avec le mode désactivé (ton cas) :** Il ne se pose pas de question. S'il ne reçoit pas de signal, il **supprime l'instance** immédiatement de sa liste.
+
+### 2. Pourquoi c'est une bonne chose pour toi (en local)
+
+C'est exactement ce que tu recherches pour ton environnement de développement :
+
+* **Réactivité :** Quand tu coupes une instance de `category-service` pour tester ton Load Balancer, tu veux qu'Eureka la supprime **tout de suite**.
+* **Nettoyage :** Cela évite que ta Gateway essaie d'envoyer des requêtes à des instances fantômes qui n'existent plus sur ton laptop.
+
+### 3. Les conséquences sur ton "Homogénéité"
+
+En désactivant ce mode, tu renforces la précision de ton système :
+
+* Ta Gateway aura une liste toujours **à jour** des instances réellement allumées.
+* Tu évites les erreurs de connexion aléatoires sur Postman.
+
+### 4. Est-ce dangereux ?
+
+* **Sur ton laptop : Non.** C'est même recommandé pour éviter la confusion.
+* **En production : Oui.** Si tu as une micro-coupure réseau entre tes serveurs, Eureka supprimerait tous tes services alors qu'ils fonctionnent encore, rendant ton application totalement indisponible.
+
+---
+
+**Résumé :** Ne t'inquiète pas pour ce message rouge. Il confirme juste que ta configuration `enable-self-preservation: false` est bien prise en compte et que ton Eureka est maintenant en mode "strict" : pas de signal = suppression.
+
+**Maintenant que ton infrastructure est stable, souhaites-tu que nous testions la "tolérance aux pannes" en simulant l'arrêt brutal d'une de tes instances ?**

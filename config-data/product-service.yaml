@@ -31,12 +31,15 @@ eureka:
     lease-renewal-interval-in-seconds: 5 # Envoie un signal toutes les 5s (au lieu de 30s)
     lease-expiration-duration-in-seconds: 10 # Si pas de signal après 10s, considère l'instance morte
 
-# Exposition des points de contrôle pour Actuator
+# Configuration d'Actuator pour exposer les points de contrôle
 management:
   endpoints:
     web:
       exposure:
-        include: "health,info,env,refresh"
+        include: "health,info,env,gateway,health,refresh"
+  endpoint:
+    health:
+      show-details: always
 
 logging:
   pattern:

@@ -3,7 +3,7 @@ server:
 
 eureka:
   server:
-    enable-self-preservation: false
+    enable-self-preservation: true
     eviction-interval-timer-in-ms: 3000 
   client:
     register-with-eureka: false
@@ -14,11 +14,15 @@ eureka:
     hostname: localhost
     #prefer-ip-address: true
 
+# Configuration d'Actuator pour exposer les points de contrôle
 management:
   endpoints:
     web:
       exposure:
         include: "*"
+  endpoint:
+    health:
+      show-details: always
 
 logging:
   pattern:

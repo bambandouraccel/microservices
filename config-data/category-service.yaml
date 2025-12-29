@@ -26,12 +26,16 @@ eureka:
     lease-expiration-duration-in-seconds: 10 # Si pas de signal après 10s, considère l'instance morte
     
 
-# Exposition des points de contrôle pour Actuator
+# Configuration d'Actuator pour exposer les points de contrôle
 management:
   endpoints:
     web:
       exposure:
-        include: "health,info,env,refresh"
+        include: "health,info,env,gateway,health,refresh"
+  endpoint:
+    health:
+      show-details: always
+      
 logging:
   pattern:
     console: "%d{HH:mm:ss} [%thread] %-5level %logger{36} - [${spring.application.name}] - %msg%n"
