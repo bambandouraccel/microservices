@@ -38,3 +38,41 @@ En désactivant ce mode, tu renforces la précision de ton système :
 **Résumé :** Ne t'inquiète pas pour ce message rouge. Il confirme juste que ta configuration `enable-self-preservation: false` est bien prise en compte et que ton Eureka est maintenant en mode "strict" : pas de signal = suppression.
 
 **Maintenant que ton infrastructure est stable, souhaites-tu que nous testions la "tolérance aux pannes" en simulant l'arrêt brutal d'une de tes instances ?**
+
+Question:  quel est le nom de loadbalancer qu'utilise Spring cloud
+
+
+Le nom actuel du load balancer utilisé par l'écosystème Spring Cloud est **Spring Cloud LoadBalancer**.
+
+Voici ce qu'il faut savoir sur son évolution et son fonctionnement :
+
+### 1. Le successeur de Netflix Ribbon
+
+Pendant longtemps, Spring Cloud utilisait **Netflix Ribbon**. Cependant, Netflix a arrêté de faire évoluer Ribbon (mode maintenance). Spring a donc créé sa propre solution, **Spring Cloud LoadBalancer**, qui est désormais le standard par défaut depuis Spring Cloud Hoxton et les versions suivantes (incluant Spring Boot 3.x que tu utilises).
+
+### 2. Comment il fonctionne dans ton projet
+
+Dans ton architecture, il intervient à deux endroits stratégiques :
+
+* **Au niveau de l'API Gateway :** Lorsque tu écris `uri: lb://category-service`, c'est **Spring Cloud LoadBalancer** qui intercepte l'identifiant `category-service`, demande les adresses IP à Eureka, et choisit laquelle appeler.
+* **Au niveau de FeignClient (dans Product) :** Lorsque ton service `Product` appelle `Category`, c'est aussi lui qui gère la répartition si tu as plusieurs instances de catégories.
+
+### 3. Les algorithmes de répartition
+
+Par défaut, il utilise l'algorithme **Round Robin** (tourniquet) :
+
+1. Requête 1 → Instance A
+2. Requête 2 → Instance B
+3. Requête 3 → Instance A ... et ainsi de suite.
+
+### 4. Pourquoi est-il "côté client" ?
+
+On dit que c'est un load balancer **côté client** (Client-Side Load Balancing) car c'est l'application qui appelle (la Gateway ou le service Product) qui décide vers quelle instance elle va envoyer la requête, contrairement à un load balancer classique (comme HAProxy ou F5) qui est un composant matériel ou logiciel placé "devant" les services.
+
+### Pourquoi c'est important pour ton projet ?
+
+Comme tu l'as vu avec tes logs Eureka, si une instance tombe, **Spring Cloud LoadBalancer** est immédiatement informé par Eureka et arrête d'envoyer du trafic vers l'instance morte. C'est ce qui garantit que tes instances restent **homogènes** du point de vue de l'utilisateur final.
+
+---
+
+**Souhaites-tu savoir comment personnaliser l'algorithme pour, par exemple, envoyer plus de trafic vers une instance plus puissante que les autres ?**
